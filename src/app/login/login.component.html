@@ -1,0 +1,24 @@
+<md-toolbar md-dialog-title color="primary">
+  Login
+  <span class="flex-spacer"></span>
+  <button md-button md-dialog-close>&times;</button>
+</md-toolbar>
+
+<p>{{user | json}}</p>
+
+<form novalidate (ngSubmit)="onSubmit()">
+  <md-dialog-content>
+    <md-input-container>
+      <input mdInput placeholder="username" type="text" name="username" [(ngModel)]="user.username" required>
+    </md-input-container>
+    <md-input-container>
+        <input mdInput placeholder="password" type="password" name="password" [(ngModel)]="user.password" required>
+      </md-input-container>
+      <md-checkbox [(ngModel)]="user.remember" name="remember">Remember Me</md-checkbox>
+  </md-dialog-content>
+  <md-dialog-actions>
+    <span class="flex-spacer"></span>
+    <button md-button md-dialog-close>Cancel</button>
+    <button md-button type="submit" class="background-primary text-floral-white">Login</button>
+  </md-dialog-actions>
+</form>
