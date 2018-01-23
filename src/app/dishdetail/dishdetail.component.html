@@ -6,6 +6,10 @@
     fxLayoutGap="10px" 
     fxLayoutGap.xs="0">
 
+  <div [hidden]="dish">
+    <md-spinner></md-spinner><h4>Loading . . . Please Wait</h4>
+  </div>
+
   <div fxFlex="40" *ngIf="dish">
       <md-card>
           <md-card-header>
@@ -34,22 +38,65 @@
   </div>
 
   <div fxFlex="40" *ngIf="dish">
-      <div>
-        <h2>Comments</h2>
+    <div>
+      <h2>Comments</h2>
+      <md-list>
+          <md-list-item class="md-4-line" *ngFor="let c of dish.comments">
+            <div class="md-list-item-text">
+              <p mdLine>{{c.comment}}<br>
+              {{c.rating}}&nbsp;Stars<br>
+              --&nbsp;{{c.author}} {{c.date | date}}</p>
+              <p mdLine>&nbsp;</p>
+            </div>
+          </md-list-item>
+        </md-list>
+    </div>
+    <!-- User Comment Form here -->
+    <div>
+      <div *ngIf="userComment">
         <md-list>
-            <md-list-item class="md-4-line" *ngFor="let c of dish.comments">
+            <md-list-item class="md-4-line">
               <div class="md-list-item-text">
-                <p mdLine>{{c.comment}}<br>
-                {{c.rating}}&nbsp;Stars<br>
-                --&nbsp;{{c.author}} {{c.date | date}}</p>
+                <p mdLine>{{userComment.comment}}<br>
+                {{userComment.rating}}&nbsp;Stars<br>
+                --&nbsp;{{userComment.author}}</p>
                 <p mdLine>&nbsp;</p>
               </div>
             </md-list-item>
-          </md-list>
-        </div>
-        <div [hidden]="dish">
-          <md-spinner></md-spinner><h4>Loading . . . Please Wait</h4>
-        </div>
+        </md-list>
+      </div>
+      <div>
+        <form novalidate [formGroup]="commentForm" (ngSubmit)="onCommentSubmit()">
+          <p>
+              <md-slider formControlName="rating" min="1" max="5" step="1" value="1"
+                thumbLabel tickInterval="1"></md-slider>
+          </p>
+          <p>
+            <md-input-container
+                dividerColor="{{commentFormErrors.author ? 'warn' : 'primary' }}">
+              <input mdInput formControlName="author" placeholder="Name" type="text">
+              <md-hint>
+                <span [hidden]="!(commentFormErrors.author)">{{commentFormErrors.author}}</span>
+              </md-hint>
+            </md-input-container>
+          </p>
+          <p>
+            <md-input-container
+              dividerColor="{{commentFormErrors.comment}} ? 'warn' : 'primary' ">
+              <textarea mdInput formControlName="comment" rows="5" cols="50" placeholder="Comment" type="text"></textarea>
+              <md-hint>
+                <span [hidden]="!(commentFormErrors.comment)">{{commentFormErrors.comment}}</span>
+              </md-hint>
+            </md-input-container>
+          </p>
+          <p>
+            <button md-button type="submit" 
+              class="background-primary text-floral-white" 
+              [disabled]="commentForm.invalid">Submit</button>
+          </p>
+        </form>
+      </div>
     </div>
+  </div>
 
 </div>
