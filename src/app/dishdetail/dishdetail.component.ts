@@ -26,6 +26,7 @@ export class DishdetailComponent implements OnInit {
   next: number;
   commentForm: FormGroup;
   userComment: Comment;
+  errMess: string;
 
   commentFormErrors = {
     'comment': '',
@@ -47,13 +48,14 @@ export class DishdetailComponent implements OnInit {
     private location: Location,
     private fb: FormBuilder,
     @Inject('BaseURL') private BaseURL 
-  ) {
+) {
     this.createCommentForm();
    }
 
   ngOnInit() {
     this.dishservice.getDishIds()
-    .subscribe(dishIds => this.dishIds = dishIds);
+    .subscribe(dishIds => this.dishIds = dishIds,
+    errmess => {this.errMess = <any>errmess; });
 
     this.route.params
     .switchMap((params: Params) => this.dishservice.getDish(+params['id']))
