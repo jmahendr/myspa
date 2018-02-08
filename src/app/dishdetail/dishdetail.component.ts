@@ -21,6 +21,7 @@ import { keyframes } from '@angular/core/src/animation/dsl';
 export class DishdetailComponent implements OnInit {
 
   dish: Dish;
+  dishCopy=null;
   dishIds: number[];
   prev: number;
   next: number;
@@ -59,7 +60,11 @@ export class DishdetailComponent implements OnInit {
 
     this.route.params
     .switchMap((params: Params) => this.dishservice.getDish(+params['id']))
-    .subscribe(dish => {this.dish = dish, this.setPrevNext(dish.id)});
+    .subscribe(dish => {
+                        this.dish = dish; 
+                        this.dishCopy = dish;
+                        this.setPrevNext(dish.id);
+                      });
   }
 
   goBack() {
@@ -116,7 +121,9 @@ export class DishdetailComponent implements OnInit {
     this.userComment['date'] = new Date().toISOString();
     
 
-    this.dish.comments.push(this.userComment);
+    this.dishCopy.comments.push(this.userComment);
+    this.dishCopy.save()
+    .subscribe(dish => {this.dish = dish; console.log(JSON.stringify(dish))});
     this.userComment = undefined;
 
     this.commentFormErrors = {
