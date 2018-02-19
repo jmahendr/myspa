@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 
 import { Params, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -6,7 +6,7 @@ import { Location } from '@angular/common';
 import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormGroupDirective } from '@angular/forms';
 import { Comment } from '../shared/comment';
 
 import 'rxjs/add/operator/switchMap';
@@ -38,6 +38,7 @@ export class DishdetailComponent implements OnInit {
   userComment: Comment;
   errMess: string;
   visibility = 'shown';
+  @ViewChild(FormGroupDirective) commentFormDirective;
 
 
   commentFormErrors = {
@@ -147,6 +148,8 @@ export class DishdetailComponent implements OnInit {
       comment: '',
       author: ''
     });
+
+    this.commentFormDirective.resetForm();
     this.commentFormErrors = {
       'comment': '',
       'author': ''

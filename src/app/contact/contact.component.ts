@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormGroupDirective } from '@angular/forms';
 
 import { Feedback, ContactType } from '../shared/feedback';
 import { flyInOut } from '../animations/app.animation';
@@ -19,8 +19,10 @@ import { flyInOut } from '../animations/app.animation';
 export class ContactComponent implements OnInit {
  
   feedbackForm: FormGroup;
+  @ViewChild(FormGroupDirective) feedbackFormDirective;
   feedback: Feedback;
   contactType = ContactType;
+  
 
   formErrors = {
     'firstname': '',
@@ -103,5 +105,6 @@ export class ContactComponent implements OnInit {
       contacttype: 'None',
       message: ''
     });
+    this.feedbackFormDirective.resetForm();
   }
 }
