@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormGroupDirective } from '@angular/forms';
 
 import { Feedback, ContactType } from '../shared/feedback';
-import { flyInOut } from '../animations/app.animation';
+import { flyInOut, visibility } from '../animations/app.animation';
+
+import { FeedbackService } from "../services/feedback.service";
 
 @Component({
   selector: 'app-contact',
@@ -13,15 +15,23 @@ import { flyInOut } from '../animations/app.animation';
     'style': 'display: block;'
     },
     animations: [
-      flyInOut()
+      flyInOut(),
+      visibility()
     ]
 })
 export class ContactComponent implements OnInit {
  
   feedbackForm: FormGroup;
   @ViewChild(FormGroupDirective) feedbackFormDirective;
+  //view https://github.com/angular/material2/issues/4190 on resetForm() usage.
+
   feedback: Feedback;
   contactType = ContactType;
+  retFeedback = {};
+  formVisibility='shown';
+  spinnerVisibility='hidden';
+  postConfirmationVisibility='hidden';
+  submitted = false;
   
 
   formErrors = {
@@ -52,7 +62,8 @@ export class ContactComponent implements OnInit {
     },
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private feedbackService: FeedbackService) {
     this.createForm();
    }
 
@@ -95,7 +106,30 @@ export class ContactComponent implements OnInit {
 
   onSubmit() {
     this.feedback = this.feedbackForm.value;
-    console.log(this.feedback);
+    //console.log(this.feedback);
+    this.formVisibility = 'hidden';
+    this.spinnerVisibility = 'shown';
+    this.feedbackService.submitFeedback(this.feedback)
+    .subscribe(data => {
+        //var key = 'id';
+        this.retFeedback = data;
+        this.spinnerVisibility='hidden';
+        this.postConfirmationVisibility='shown';
+        this.submitted = true;
+        setTimeout(() => {
+          this.submitted = false;
+          this.postConfirmationVisibility='hidden';
+          this.formVisibility='shown';
+        }, 5000);
+        
+        /*this.feedbackService.getFeedback(data[key])
+          .subscribe(fbr => {
+            this.retFeedback = fbr;
+            console.log('output 1' + JSON.stringify(this.retFeedback));
+            console.log('output 2' + JSON.stringify(data[key]));
+            }); */
+      },
+        errmess => {console.log(errmess)});
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
