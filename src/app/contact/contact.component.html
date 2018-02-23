@@ -38,10 +38,10 @@
 
       <div fxFlex fxFlexOffset="20px" class="form-size">
         <h3>Send us your Feedback</h3>
-        <div *ngIf="spinnerVisibility=='shown'">
+        <div *ngIf="spinnerVisibility=='shown'" [@expand]>
             <md-spinner></md-spinner><h4>Submitting Form</h4>
         </div>
-        <div *ngIf="submitted==true">
+        <div *ngIf="submitted==true" [@expand]>
           <h3>Your Submission</h3>
           <p>First Name: {{retFeedback.firstname}}</p>
           <p>Last Name: {{retFeedback.lastname}}</p>
@@ -52,7 +52,7 @@
           <p>Feedback: {{retFeedback.message}}</p>
         </div>
 
-        <div [@visibility]="formVisibility">
+        <div [@visibility]="formVisibility" [@expand]>
           <form novalidate [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
               <p>
                 <md-input-container class="half-width"
